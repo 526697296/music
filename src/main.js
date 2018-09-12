@@ -10,6 +10,10 @@ import fastclick from 'fastclick'
 
 import 'common/stylus/index.styl'
 
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
+Vue.use(VueAwesomeSwiper, /* { default global options } */)
+
 Vue.config.productionTip = false
 
 // 官网用法，点击没有300ms延时
