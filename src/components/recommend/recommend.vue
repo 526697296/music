@@ -1,7 +1,7 @@
 <template>
   <div class="recommend">
     <!-- :data="disclist"确保数据全部加载进来，否则scroll无效 -->
-    <scroll class="recommend-content" :data="disclist">
+    <scroll ref="scroll" class="recommend-content" :data="disclist">
       <div>
       <div class="slider-wrapper" v-if="recommends.length">
         <swiper :options="swiperOption">
@@ -19,7 +19,7 @@
           <li v-for="(item, index) in disclist" :key="index" class="list-content">
             <!-- 列表左的img -->
             <div class="icon">
-              <img :src="item.imgurl" width="60" height="60">
+              <img @load="loadImg" v-lazy="item.imgurl" width="60" height="60">
             </div>
             <!-- 列表右边的text -->
             <div class="text">
@@ -30,11 +30,17 @@
         </ul>
       </div>
       </div>
+      <!-- loading部分 -->
+      <div class="loading-content" v-show="!disclist.length">
+        <!-- 引入封装的loading组件 -->
+        <loading></loading>
+      </div>
     </scroll>
   </div>
 </template>
 <script>
 import Scroll from 'base/scroll/scroll.vue'
+import Loading from 'base/loading/loading.vue'
 import {getRecommend, getDiscList} from 'api/recommend.js'
 import {ERR_OK} from 'api/config'
 export default{
@@ -56,10 +62,13 @@ export default{
     }
   },
   components: {
-    Scroll
+    Scroll,
+    Loading
   },
   created() {
-    this._getRecommend();
+    setTimeout(()=>{
+      this._getRecommend();
+    },500);
     this._getDiscList();
   },
   methods: {
@@ -79,6 +88,12 @@ export default{
           console.log(this.disclist);
         }
       })
+    },
+    loadImg() {
+      if(!this.checkLoaded){
+        this.$refs.scroll.refresh();
+        this.checkLoaded = true;
+      }
     }
   }
 }
@@ -95,6 +110,11 @@ export default{
     .recommend-content
       height: 100%
       overflow: hidden
+      .loading-content
+        position absolute
+        width 100%
+        top 50%
+        transform translateY(-50%)
       .slider-wrapper
         position: relative
         width: 100%
@@ -115,7 +135,7 @@ export default{
           width 60px
           padding 0 20px 0 20px
           align-items center
-          box-sizing border-box
+          margin 10px 0 10px 0
           .icon
             flex: 0 0 60px
             width: 60px
@@ -128,7 +148,7 @@ export default{
             line-height: 20px
             font-size: $font-size-medium
             .name
-              margin-bottom: 15px
+              margin-bottom: 10px
               color: $color-text
             .desc
               color: $color-text-d

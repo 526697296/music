@@ -32,6 +32,8 @@ export function getDiscList() {
     sin: 0,
     ein: 29,
     sortId: 5,
+    inCharset: 'utf-8',
+    outCharset: 'utf-8',
     needNewCode: 0,
     categoryId: 10000000,
     rnd: Math.random(),
