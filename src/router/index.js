@@ -4,6 +4,7 @@ import rank from 'components/rank/rank.vue'
 import search from 'components/search/search.vue'
 import sings from 'components/sings/sings.vue'
 import recommend from 'components/recommend/recommend.vue'
+import singsdeatil from 'components/sings-detail/sings-detail.vue'
 
 
 Vue.use(Router)
@@ -28,7 +29,13 @@ export default new Router({
     {
       path: '/sings',
       name: 'sings',
-      component: sings
+      component: sings,
+      children: [
+        {
+          path: ':id',
+          component: singsdeatil
+        }
+      ]
     },
     {
       path: '/recommend',

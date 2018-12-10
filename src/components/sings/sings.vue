@@ -1,6 +1,7 @@
 <template>
   <div class="sings">
-    <listview :data="singss"></listview>
+    <listview :data="singss" @select="selectsings"></listview>
+    <router-view></router-view>
   </div>
 </template>
 <script>
@@ -8,6 +9,7 @@ import {getSings} from 'api/sings.js'
 import {ERR_OK} from 'api/config.js'
 import sings from 'common/js/sings.js'
 import listview from 'base/listview/listview.vue'
+import {mapMutations} from 'vuex'
 const HOT_HAME = '热门'
 const HOT_SINGS_LENGTH = 10
 export default{
@@ -24,6 +26,14 @@ export default{
     this._getSingsList();
   },
   methods: {
+    // sings这个必须和router里面的父组件名字一样
+    selectsings(sings) {
+      this.$router.push({
+        path: `/sings/${sings.id}`
+      })
+      // 实现对一个mutations的提交
+      this.setSinger(sings);
+    },
     _getSingsList() {
       getSings().then((res)=>{
         if(res.code === ERR_OK){
@@ -95,7 +105,11 @@ export default{
         });
         return hot.concat(ret);
         // return hot;
-    }
+    },
+    ...mapMutations({
+      // 做一个映射关系
+      setSinger: 'SET_SINGS'
+    })
   }
 }
 </script>

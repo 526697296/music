@@ -5,7 +5,7 @@
       <li v-for="(group, index) in data" :key="index" class="list-group" ref="listgroup">
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
-          <li v-for="(item, index) in group.items" :key="index" class="list-group-item">
+          <li @click="selectItem(item)" v-for="(item, index) in group.items" :key="index" class="list-group-item">
             <!-- v-lazy图片懒加载 -->
             <img v-lazy="item.avatar" class="avatar">
             <span class="name">{{item.name}}</span>
@@ -117,6 +117,10 @@ export default{
       let delta = (this.touch.y2 - this.touch.y1) / ANCHER_HEIGHT | 0;
       let anindex = parseInt(this.touch.anindex) + delta;
       this._scrollto(anindex);
+    },
+    // 事件派发出去，传递给父组件
+    selectItem(item) {
+      this.$emit('select', item)
     },
     _scrollto(index) {
       if (!index && index !== 0) {
